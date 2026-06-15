@@ -1,0 +1,29 @@
+ANEXO III. Carga masiva de GeoPackages a PostgreSQL mediante ogr2ogr
+
+```bat
+@echo off
+
+REM Conexión a PostgreSQL
+set PG_CONN=PG:"host=localhost dbname=Edificaciones user=postgres password=****"
+
+REM Carpeta que contiene los GeoPackage
+set CARPETA=C:\Ruta\GeoPackages
+
+REM Recorrer todos los archivos .gpkg
+for %%F in ("%CARPETA%\*.gpkg") do (
+
+    REM Nombre de la tabla = nombre del archivo
+    echo Importando %%~nF
+
+    ogr2ogr ^
+    -f "PostgreSQL" ^
+    %PG_CONN% ^
+    "%%F" ^
+    -nln %%~nF ^
+    -lco GEOMETRY_NAME=geom
+
+)
+
+echo Proceso finalizado.
+pause
+```
